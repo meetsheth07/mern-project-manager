@@ -1,0 +1,19 @@
+{
+  "name": "project_management_application",
+  "version": "1.0.0",
+  "description": "project management application at production level",
+  "keywords": [
+    "API",
+    "BACKEND"
+  ],
+  "license": "ISC",
+  "author": "MEET SHETH",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "devDependencies": {
+    "prettier": "3.8.4"
+  }
+}
