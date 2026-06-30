@@ -15,5 +15,7 @@ app.use(cors({
     allowHeaders: ["Content-Type", "Authorization"]
 
 }));
+import healthcheckRoutes from "./routes/healthcheck.routes.js";
+app.use("/api/v1/healthcheck", healthcheckRoutes);
 
 export default app;
