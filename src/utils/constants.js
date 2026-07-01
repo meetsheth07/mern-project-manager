@@ -1,7 +1,7 @@
 export const userRolesEnum = {
     MEMBER: "member",
     ADMIN: "admin",
-    Project_Admin: "project_Admin"
+    PROJECT_ADMIN: "project_Admin"
 }
 
 export const availableRoles = Object.values(userRolesEnum);
