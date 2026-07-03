@@ -1,7 +1,7 @@
 import mongoose , {Schema} from 'mongoose'
 import bcrypt, { compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 const userSchema= new Schema({
     avatar:{
         type:{
@@ -61,11 +61,10 @@ const userSchema= new Schema({
     timestamps:true
 }
 );
-userSchema.pre("save",async function(next){
-    if(!this.isModified("password"))return next();
-    this.password = await bcrypt.hash(this.password,10)
-    next();
-})
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+    this.password = await bcrypt.hash(this.password, 10);
+});
 userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password,this.password);
 }
@@ -83,9 +82,9 @@ userSchema.methods.generateRefreshToken = function () {
     );
 }
 userSchema.methods.generateTemporaryToken = function () {
-    const unHashedToken = crypto.randomBytes(20).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(unHashedToken).digest("hex");
+    const unhashedToken = crypto.randomBytes(20).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(unhashedToken).digest("hex");
     const TokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes from now
-    return {unhashedToken,hashedToken,TokenExpiry};
+    return {unhashedToken, hashedToken, TokenExpiry};
 }
 export const user = mongoose.model("user",userSchema)
