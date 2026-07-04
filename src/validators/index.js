@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const userRegisterValidator = () => {
+const userRegisterValidator = () => {
   return [
     body('email')
       .trim()
@@ -16,3 +16,10 @@ export const userRegisterValidator = () => {
       .isLength({ min: 6, max: 20 }).withMessage('Password must be between 6 and 20 characters'),
   ];
 };
+const userLoginValidator = () =>{
+    return[
+        body('email').optional().isEmail().withMessage('email is invalid'),
+        body('password').notEmpty().withMessage('password is required')
+    ]
+}
+export { userRegisterValidator , userLoginValidator};

@@ -6,4 +6,7 @@ export const validate = (req,res,next)=>{
     if(errors.isEmpty()){
         return next();
     }
+    const extractedErrors = [];
+    errors.array().map((err)=>extractedErrors.push({[err.path]: err.msg}));
+    throw new apiError(422,"Validation Error",extractedErrors);
 }

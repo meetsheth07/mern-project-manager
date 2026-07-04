@@ -87,6 +87,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new apiResponse(200, "Email verified successfully", { user: found }));
 });
+
 const login = asyncHandler(async(req,res)=>{
   const {email,password,username} = req.body
   if(!email){
@@ -113,13 +114,45 @@ const login = asyncHandler(async(req,res)=>{
   }
   const options = {
     httpOnly: true,
-    secure: true
-  }
+    secure: process.env.NODE_ENV === "production",
+  };
   return res.status(200)
-  .cookie("refreshToken",refreshToken,options)
-  .cookie("accessToken",accessToken,options)
-  .json(new apiResponse(200,"User Loggged in successfully",{user:LoggedInUser,accessToken,refreshToken}))
+    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, options)
+    .json(new apiResponse(200, "User logged in successfully", { user: LoggedInUser, accessToken, refreshToken }));
 
 })
 
-export { registerUser, verifyEmail };
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: "",
+      },
+    },
+    {
+      new: true,
+    },
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new apiResponse(200, "User logged out successfully", {}));
+});
+
+const getCurrentUser = asyncHandler(async(req , res)=>{
+   return res.status(200).json(
+    new apiResponse(200,
+      req.user,
+      "current user fetched successfully"
+    )
+   )
+})
+
+export { registerUser, verifyEmail ,login, logoutUser, getCurrentUser};  
